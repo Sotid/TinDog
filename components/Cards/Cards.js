@@ -1,76 +1,59 @@
-import React, { useState, useMemo } from "react";
-import { Button } from "react-native";
+import React, { useState, useMemo, useEffect } from "react";
+import { Button, View } from "react-native";
 import styled from "styled-components/native";
 import TinderCard from "react-tinder-card";
+import firebase from "../../database/firebase";
 
-const cards = [
-  { name: "Pepe", image: "https://media.giphy.com/media/GfXFVHUzjlbOg/giphy.gif" },
-  { name: "Peri", image: "https://media.giphy.com/media/irTuv1L1T34TC/giphy.gif" },
-  { name: "Puppy", image: "https://media.giphy.com/media/LkLL0HJerdXMI/giphy.gif" },
-  { name: "Snow", image: "https://media.giphy.com/media/fFBmUMzFL5zRS/giphy.gif" },
-  { name: "Snoopy", image: "https://media.giphy.com/media/oDLDbBgf0dkis/giphy.gif" },
-  { name: "Tina", image: "https://media.giphy.com/media/7r4g8V2UkBUcw/giphy.gif" },
-  { name: "Lola", image: "https://media.giphy.com/media/K6Q7ZCdLy8pCE/giphy.gif" },
-  { name: "Yuna", image: "https://media.giphy.com/media/hEwST9KM0UGti/giphy.gif" },
-  {
-    name: "Rumba",
-    image: "https://media.giphy.com/media/3oEduJbDtIuA2VrtS0/giphy.gif",
-  },
-];
+// const alreadyRemoved = [];
+// let charactersState = cards;
 
-const alreadyRemoved = [];
-let charactersState = cards;
+function Cards() {
+  const [dogs, setDogs] = useState();
 
-export default function Cards() {
-  const [dogs, setDogs] = useState(cards);
-  //   const [lastDirection, setLastDirection] = useState();
+  const swiped = (direction, nameToDelete) => {
+    console.log("removing:" + nameToDelete);
+  };
 
-  //   const childRefs = useMemo(
-  //     () =>
-  //       Array(cards.length)
-  //         .fill(0)
-  //         .map((i) => React.createRef()),
-  //     []
-  //   );
+  const outOfFrame = (name) => {
+    console.log(name + " left the screen!");
+  };
 
-  //   const swiped = (direction, nameToDelete) => {
-  //     console.log("removing: " + nameToDelete + " to the " + direction);
-  //     setLastDirection(direction);
-  //     alreadyRemoved.push(nameToDelete);
-  //   };
+  useEffect(() => {
+    const unsuscribe = firebase
+      .collection("dogs")
+      .onSnapshot((snapshot) =>
+        setDogs(snapshot.docs.map((doc) => doc.data()))
+      );
 
-  //   const outOfFrame = (name) => {
-  //     console.log(name + " left the screen!");
-  //     charactersState = charactersState.filter(
-  //       (character) => character.name !== name
-  //     );
-  //     setDogs(charactersState);
-  //   };
+    return () => {
+      unsuscribe();
+    };
+  }, []);
+  console.log(dogs);
 
-  //   const swipe = (dir) => {
-  //     const cardsLeft = characters.filter(
-  //       (person) => !alreadyRemoved.includes(person.name)
-  //     );
-  //     if (cardsLeft.length) {
-  //       const toBeRemoved = cardsLeft[cardsLeft.length - 1].name; // Find the card object to be removed
-  //       const index = db.map((person) => person.name).indexOf(toBeRemoved); // Find the index of which to make the reference to
-  //       alreadyRemoved.push(toBeRemoved); // Make sure the next card gets removed next time if this card do not have time to exit the screen
-  //       childRefs[index].current.swipe(dir); // Swipe the card!
-  //     }
-  //   };
   return (
     <Container>
       <CardContainer>
-        {dogs.map((dog, index) => (
-          <TinderCard key={dog.name} preventSwipe={["right", "left"]}>
-            <Card>
-              <CardImage source={{uri: dog.image}}>
-                <CardTitle>{dog.name}</CardTitle>
-              </CardImage>
-            </Card>
-          </TinderCard>
-        ))}
+        {dogs &&
+          dogs.map((dog, index) => (
+            <TinderCard
+              key={dog.Name}
+              preventSwipe={["right", "left"]}
+              onSwipe={(dir) => swiped(dir, dog.Name)}
+              onCardDownScreen={() => outOfFrame(dog.Name)}
+
+            >
+              <Card>
+                <CardImage source={{ uri: dog.Image }}>
+                  <CardTitle>{dog.Name}</CardTitle>
+                  <View>{dog.Location}</View>
+                </CardImage>
+              </Card>
+            </TinderCard>
+          ))}
       </CardContainer>
+      <Button title="Like" />
+      <Button title="Not" />
     </Container>
   );
 }
@@ -80,13 +63,14 @@ const Container = styled.View`
   align-items: center;
   justify-content: center;
   width: 100%;
+  background: #eff7f6;
 `;
 
 const CardContainer = styled.View`
   width: 100%;
   max-width: 360px;
   height: 700px;
-  padding: 80px 50px;
+  padding: 100px 50px;
 `;
 
 const Card = styled.View`
@@ -114,8 +98,8 @@ const CardTitle = styled.Text`
   bottom: 0;
   margin: 10px;
   color: white;
-  fontSize: 25px;
-  fontWeight: 700;
+  fontsize: 25px;
+  fontweight: 700;
 `;
 
 const Buttons = styled.View`
@@ -129,3 +113,5 @@ const InfoText = styled.Text`
   display: flex;
   z-index: -100;
 `;
+
+export default Cards;

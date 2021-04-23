@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, Text, Button } from 'react-native';
-import firebase from '../database/firebase';
+import firebase from '../../database/data';
 
 export default class Logout extends Component {
   constructor() {
@@ -12,7 +12,7 @@ export default class Logout extends Component {
 
   signOut = () => {
     firebase.auth().signOut().then(() => {
-      this.props.navigation.navigate('Login')
+      this.props.navigation.navigate('Home')
     })
     .catch(error => this.setState({ errorMessage: error.message }))
   }  
