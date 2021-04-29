@@ -1,176 +1,67 @@
-// export default function Dashboard({ navigation }) {
-//   let currentUserUID = firebase.auth().currentUser.uid;
-//   const [firstName, setFirstName] = useState('');
-//
-//   useEffect(() => {
-//     async function getUserInfo(){
-//       try {
-//         let doc = await firebase
-//           .firestore()
-//           .collection('users')
-//           .doc(currentUserUID)
-//           .get();
+import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet, Alert} from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import firebase from 'firebase/app';
+import {loggingOut} from '../../database/methods';
 
-//         if (!doc.exists){
-//           Alert.alert('No user data found!')
-//         } else {
-//           let dataObj = doc.data();
-//           console.log(dataObj)
-//           setFirstName(dataObj.firstName)
-
-//         }
-//       } catch (err){
-//       Alert.alert('There is an error.', err.message)
-//       }
-//     }
-//     getUserInfo();
-//   })
-
-//   const handlePress = () => {
-//     loggingOut();
-//     navigation.replace('Home');
-//   };
-
-//   return (
-//     <View style={styles.container}>
-//       <Text style={styles.text}>Hi {firstName}</Text>
-//       <Text style={styles.text}>Hi {age}</Text>
-
-//       <TouchableOpacity style={styles.button} onPress={handlePress}>
-//         <Text style={styles.buttonText}>Log Out</Text>
-//       </TouchableOpacity>
-//     </View>
-//   )
-// }
-
-import React, { useState, useEffect } from "react";
-import {
-  Button,
-  View,
-  StyleSheet,
-  TextInput,
-  ScrollView,
-  Text,
-  Alert,
-} from "react-native";
-import firebase from "firebase/app";
-import database from "../../database/firebase";
-import { TouchableOpacity } from "react-native-gesture-handler";
-import "firebase/auth";
-import { loggingOut } from "../../database/methods";
-
-const AddDog = (props) => {
-  const initalState = {
-    id: "",
-    name: "",
-    age: "",
-    breed: "",
-    city: "",
-  };
-
-  const [state, setState] = useState(initalState);
+export default function Dashboard({ navigation }) {
   let currentUserUID = firebase.auth().currentUser.uid;
-  const [firstName, setFirstName] = useState("");
+  const [firstName, setFirstName] = useState('');
+  const [dogName, setDogName] = useState('');
+  const [age, setAge] = useState('');
+  const [city,setCity] = useState('')
+  const [breed, setBreed] = useState('')
+
+  console.log(currentUserUID)
 
   useEffect(() => {
-    async function getUserInfo() {
-      try {
-        let doc = await database.collection("users").doc(currentUserUID).get();
+    async function getUserInfo(){
+      let doc = await firebase
+      .firestore()
+      .collection('users')
+      .doc(currentUserUID)
+      .get()
+      // .updateProfile({ dogName: dogName })
 
-        if (!doc.exists) {
-          Alert.alert("No user data found!");
-        } else {
-          let dataObj = doc.data();
-          console.log(dataObj);
-          setFirstName(dataObj.firstName);
-        }
-      } catch (err) {
-        Alert.alert("There is an error.", err.message);
+      if (!doc.exists){
+        Alert.alert('No user data found!')
+      } else {
+        let dataObj = doc.data();
+        setFirstName(dataObj.firstName)
+        setDogName(dataObj.dogName)
+        setAge(dataObj.age)
+        setBreed(dataObj.breed)
+        setCity(dataObj.city)
+
+
       }
     }
     getUserInfo();
-  });
+  })
 
   const handlePress = () => {
     loggingOut();
-    navigation.replace("Home");
-  };
-
-  const handleChangeText = (value, name) => {
-    setState({ ...state, [name]: value });
-  };
-
-  const saveNewDog = async () => {
-    try {
-      await database
-        .collection("dogs")
-
-        .add({
-          name: state.name,
-          age: state.age,
-          breed: state.breed,
-          city: state.city,
-        });
-
-      props.navigation.navigate("Swipe");
-    } catch (error) {
-      console.log(error);
-    }
+    navigation.replace('Home');
   };
 
   return (
-    <ScrollView style={styles.container}>
-      {/* Name Input */}
+    <View style={styles.container}>
+      <Text style={styles.titleText}>Dashboard</Text>
+      <Text style={styles.text}>Hi {firstName} and {dogName}</Text>
+      <Text style={styles.text}> {dogName}</Text>
+      <Text style={styles.text}> {age}</Text>
+      <Text style={styles.text}> {breed}</Text>
+      <Text style={styles.text}> {city}</Text>
 
-      <View style={styles.container}>
-        <Text style={styles.text}>
-          Hi {firstName} and {name}
-        </Text>
 
-        <TouchableOpacity style={styles.button} onPress={handlePress}>
-          <Text style={styles.buttonText}>Log Out</Text>
-        </TouchableOpacity>
-      </View>
 
-      <View style={styles.inputGroup}>
-        <TextInput
-          placeholder="Name"
-          onChangeText={(value) => handleChangeText(value, "name")}
-          value={state.name}
-        />
-      </View>
 
-      {/* Email Input */}
-      <View style={styles.inputGroup}>
-        <TextInput
-          placeholder="Age"
-          onChangeText={(value) => handleChangeText(value, "age")}
-          value={state.age}
-        />
-      </View>
-
-      {/* Input */}
-      <View style={styles.inputGroup}>
-        <TextInput
-          placeholder="Breed"
-          onChangeText={(value) => handleChangeText(value, "breed")}
-          value={state.breed}
-        />
-      </View>
-      <View style={styles.inputGroup}>
-        <TextInput
-          placeholder="City"
-          onChangeText={(value) => handleChangeText(value, "city")}
-          value={state.city}
-        />
-      </View>
-
-      <View style={styles.button}>
-        <Button title="Register" onPress={() => saveNewDog()} />
-      </View>
-    </ScrollView>
-  );
-};
+      <TouchableOpacity style={styles.button} onPress={handlePress}>
+        <Text style={styles.buttonText}>Log Out</Text>
+      </TouchableOpacity>
+    </View>
+  )
+}
 
 const styles = StyleSheet.create({
   inputGroup: {
@@ -227,5 +118,3 @@ const styles = StyleSheet.create({
     color: "#2E6194",
   },
 });
-
-export default AddDog;

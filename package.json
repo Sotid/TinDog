@@ -12,6 +12,7 @@
     "@react-navigation/material-top-tabs": "^5.3.15",
     "@react-navigation/native": "^5.9.4",
     "@react-navigation/stack": "^5.14.4",
+    "all": "*",
     "auth-provider": "^0.6.2",
     "babel-preset-expo": "8.3.0",
     "expo": "^41.0.1",

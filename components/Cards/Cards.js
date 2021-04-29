@@ -21,6 +21,7 @@ function Cards() {
   useEffect(() => {
     const unsuscribe = firebase
       .collection("dogs")
+    
       .onSnapshot((snapshot) =>
         setDogs(snapshot.docs.map((doc) => doc.data()))
       );
