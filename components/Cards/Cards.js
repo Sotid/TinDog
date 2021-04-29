@@ -9,9 +9,27 @@ import firebase from "../../database/firebase";
 
 function Cards() {
   const [dogs, setDogs] = useState();
+  const [yes, setYes] = useState([])
+  const [no, setNo] = useState([])
+  const [lastDirection, setLastDirection] = useState()
 
-  const swiped = (direction, nameToDelete) => {
+  const swiped = ( direction,nameToDelete, i) => {
+   if(direction === "up"){
+    
     console.log("removing:" + nameToDelete);
+    setLastDirection(direction)
+    setYes(yes.push(nameToDelete))
+
+      console.log(nameToDelete)
+      console.log(yes)
+   }else{
+    setLastDirection(direction)
+    setYes(no.push(nameToDelete))
+
+      console.log(nameToDelete)
+      console.log(no)
+   }
+
   };
 
   const outOfFrame = (name) => {
@@ -25,12 +43,12 @@ function Cards() {
       .onSnapshot((snapshot) =>
         setDogs(snapshot.docs.map((doc) => doc.data()))
       );
-
     return () => {
       unsuscribe();
     };
   }, []);
-  console.log(dogs);
+  console.log(lastDirection)
+console.log(yes)
 
   return (
     <Container>
@@ -42,7 +60,6 @@ function Cards() {
               preventSwipe={["right", "left"]}
               onSwipe={(dir) => swiped(dir, dog.Name)}
               onCardDownScreen={() => outOfFrame(dog.Name)}
-
             >
               <Card>
                 <CardImage source={{ uri: dog.Image }}>
@@ -53,6 +70,10 @@ function Cards() {
             </TinderCard>
           ))}
       </CardContainer>
+      {/* {yes &&
+          yes.map((ye) => {
+<Text>{ye}</Text>
+          })} */}
       <Button title="Like" />
       <Button title="Not" />
     </Container>
