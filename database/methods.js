@@ -47,3 +47,5 @@ export async function loggingOut() {
     Alert.alert('There is something wrong!', err.message);
   }
 }
+
+
