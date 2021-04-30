@@ -1,12 +1,16 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Alert, ScrollView, Keyboard ,StyleSheet, SafeAreaView} from 'react-native';
+import { View, Button, Text, Image, TextInput, Alert, ScrollView, Keyboard ,StyleSheet, SafeAreaView} from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { propTypes } from 'react-tinder-card';
 import { registration } from '../../database/methods';
+import ImagePickerView from "./ImagePicker"
+import * as ImagePicker from 'expo-image-picker';
 
-export default function SignUp({ navigation }) {
+export default function SignUp({ navigation }, props) {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
+  const [image, setImage] = useState('')
   const [dogName, setDogName] = useState('');
   const [age, setAge] = useState('');
   const [city,setCity] = useState('')
@@ -29,6 +33,21 @@ export default function SignUp({ navigation }) {
 
   };
 
+  const pickImageHandler = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+
+    if (!result.cancelled) {
+      setImage(result.uri);
+      console.log(result.uri)
+    }
+  };
+  
   const handlePress = () => {
     if (!firstName) {
       Alert.alert('First name is required');
@@ -102,6 +121,8 @@ export default function SignUp({ navigation }) {
           secureTextEntry={true}
           />
 <Text>Present us your dog!</Text>
+<Button title="Pick Image" onPress={pickImageHandler} />
+<Image source={image.uri}/>
 <TextInput
           style={styles.textInput}
           placeholder="Dog`s name*"

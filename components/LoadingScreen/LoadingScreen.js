@@ -6,13 +6,15 @@ import "firebase/auth";
 export default function LoadingScreen({ navigation }) {
   useEffect(
      () => {
+       
       firebase.auth().onAuthStateChanged((user) => {
         if (user) {
           navigation.replace('Dashboard');
         } else {
           navigation.replace('Home');
         }
-      });
+      })
+
     }
   );
 

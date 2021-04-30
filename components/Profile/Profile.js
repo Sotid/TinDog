@@ -3,6 +3,8 @@ import { View, Text, StyleSheet, Alert} from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import firebase from 'firebase/app';
 import {loggingOut} from '../../database/methods';
+import { Image } from 'react-native';
+
 
 export default function Dashboard({ navigation }) {
   let currentUserUID = firebase.auth().currentUser.uid;
@@ -40,7 +42,6 @@ console.log(dataObj)
     }
     getUserInfo();
   })
-
   const handlePress = () => {
     loggingOut();
     navigation.replace('Home');
@@ -58,6 +59,19 @@ console.log(dataObj)
 	};
 // console.log(coordinates)
 
+
+  let findCoordinates = () => {
+		navigator.geolocation.getCurrentPosition(
+			position => {
+				const location = JSON.stringify(position);
+
+				setCoordinates({location});
+			},
+			error => Alert.alert(error.message),
+			{ enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
+		);
+	};
+// console.log(coordinates)
   return (
     <View style={styles.container}>
       <Text style={styles.titleText}>Hi {firstName} and {dogName}</Text>
@@ -129,6 +143,7 @@ const styles = StyleSheet.create({
     marginBottom: "3%",
     fontWeight: "bold",
     color: "black",
+
   },
   titleText: {
     textAlign: "center",
