@@ -11,7 +11,9 @@ export default function Dashboard({ navigation }) {
   const [age, setAge] = useState('');
   const [city,setCity] = useState('')
   const [breed, setBreed] = useState('')
-
+  const [coordinates, setCoordinates] = useState([])
+  const [image, setImage] = useState('')
+  const [character, setCharacter] = useState('')
   console.log(currentUserUID)
 
   useEffect(() => {
@@ -32,8 +34,8 @@ export default function Dashboard({ navigation }) {
         setAge(dataObj.age)
         setBreed(dataObj.breed)
         setCity(dataObj.city)
-
-
+        setCharacter(dataObj.character)
+console.log(dataObj)
       }
     }
     getUserInfo();
@@ -43,17 +45,35 @@ export default function Dashboard({ navigation }) {
     loggingOut();
     navigation.replace('Home');
   };
+  let findCoordinates = () => {
+		navigator.geolocation.getCurrentPosition(
+			position => {
+				const location = JSON.stringify(position);
+
+				setCoordinates({location});
+			},
+			error => Alert.alert(error.message),
+			{ enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
+		);
+	};
+// console.log(coordinates)
 
   return (
     <View style={styles.container}>
-      <Text style={styles.titleText}>Dashboard</Text>
-      <Text style={styles.text}>Hi {firstName} and {dogName}</Text>
+      <Text style={styles.titleText}>Hi {firstName} and {dogName}</Text>
+      <View style={styles.table}>
+      {image && <Image source={image}/>}
       <Text style={styles.text}> {dogName}</Text>
-      <Text style={styles.text}> {age}</Text>
-      <Text style={styles.text}> {breed}</Text>
+      <Text style={styles.text}> {age} years old </Text>
+      <Text style={styles.text}> {breed} </Text>
       <Text style={styles.text}> {city}</Text>
+      <Text style={styles.text}> {character}</Text>
 
+</View>
 
+      <TouchableOpacity style={styles.button} onPress={findCoordinates}>
+					<Text style={styles.buttonText} >Location: {coordinates}</Text>
+				</TouchableOpacity>
 
 
       <TouchableOpacity style={styles.button} onPress={handlePress}>
@@ -87,7 +107,7 @@ const styles = StyleSheet.create({
     borderColor: "white",
     backgroundColor: "#ff9999",
     padding: 5,
-    margin: "%",
+    marginTop: "15%",
   },
   buttonText: {
     fontSize: 20,
@@ -99,15 +119,14 @@ const styles = StyleSheet.create({
     height: "100%",
     width: "100%",
     backgroundColor: "#faf3dd",
-    // alignItems: 'center',
-    // justifyContent: 'center',
+    alignItems: 'center',
   },
   text: {
     textAlign: "center",
-    fontSize: 20,
+    fontSize: 18,
     fontStyle: "italic",
     marginTop: "2%",
-    marginBottom: "10%",
+    marginBottom: "3%",
     fontWeight: "bold",
     color: "black",
   },
@@ -116,5 +135,11 @@ const styles = StyleSheet.create({
     fontSize: 30,
     fontWeight: "bold",
     color: "#2E6194",
+    paddingBottom: "15%",
+    paddingTop: "6%"
   },
+  table: {
+ border: "2px solid black",
+ padding: "5%"
+  }
 });

@@ -11,6 +11,7 @@ export default function SignUp({ navigation }) {
   const [age, setAge] = useState('');
   const [city,setCity] = useState('')
   const [breed, setBreed] = useState('')
+  const [character, setCharacter] = useState('')
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
@@ -20,6 +21,12 @@ export default function SignUp({ navigation }) {
     setEmail('');
     setPassword('');
     setConfirmPassword('');
+    setDogName('');
+    setAge('');
+    setBreed('')
+    setCaracter('')
+    setCity('');
+
   };
 
   const handlePress = () => {
@@ -41,9 +48,10 @@ export default function SignUp({ navigation }) {
         lastName,
         firstName,
         dogName,
-        city,
         age,
-        breed
+        breed,
+        character,
+        city
        
       );
       navigation.navigate('Dashboard');
@@ -118,6 +126,16 @@ export default function SignUp({ navigation }) {
           value={breed}
           onChangeText={(breed) => setBreed(breed)}
           />
+ <TextInput
+          style={styles.textInput}
+          multiline = {true}
+numberOfLines = {4}
+
+          placeholder="Character*"
+          value={character}
+          onChangeText={(character) => setCharacter(character)}
+          />
+
           <TouchableOpacity style={styles.button} onPress={handlePress}>
            <Text style={styles.buttonText}>Sign Up</Text>
           </TouchableOpacity>
