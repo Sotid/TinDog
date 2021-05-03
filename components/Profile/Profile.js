@@ -62,7 +62,7 @@ export default function Dashboard({ navigation }) {
       <LinearGradient colors={["#ff9999", "#faf3dd"]} style={styles.gradient} />
       <View style={styles.imageContainer}>
         <Text style={styles.titleText}>
-          Hi {firstName} and {dogName}
+          Hello {firstName} and {dogName}
         </Text>
         <Image source={{ uri: image }} style={styles.image} />
       </View>
@@ -117,22 +117,7 @@ const styles = StyleSheet.create({
   gradient: {
     height: "16%",
   },
-  //   inputGroup: {
-  //     flex: 1,
-  //     padding: 0,
-  //     marginBottom: 15,
-  //     borderBottomWidth: 1,
-  //     borderBottomColor: "#cccccc",
-  //   },
-  //   loader: {
-  //     left: 0,
-  //     right: 0,
-  //     top: 0,
-  //     bottom: 0,
-  //     position: "absolute",
-  //     alignItems: "center",
-  //     justifyContent: "center",
-  //   },
+
   button: {
     width: 200,
     borderRadius: 15,

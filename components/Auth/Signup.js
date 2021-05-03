@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Alert, ScrollView, Keyboard ,StyleSheet, SafeAreaView} from 'react-native';
+import { View, Button, Image, Text, TextInput, Alert, ScrollView, Keyboard ,StyleSheet, SafeAreaView} from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { registration } from '../../database/methods';
+import * as ImagePicker from 'expo-image-picker';
+
 
 export default function SignUp({ navigation }) {
   const [firstName, setFirstName] = useState('');
@@ -14,6 +16,7 @@ export default function SignUp({ navigation }) {
   const [character, setCharacter] = useState('')
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [image, setImage] = useState('')
 
   const emptyState = () => {
     setFirstName('');
@@ -51,11 +54,27 @@ export default function SignUp({ navigation }) {
         age,
         breed,
         character,
-        city
+        city,
+        image
        
       );
       navigation.navigate('Dashboard');
       emptyState();
+    }
+  };
+
+  const pickImageHandler = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+
+    if (!result.cancelled) {
+      setImage(result.uri);
+      console.log(result.uri)
     }
   };
 
@@ -102,6 +121,8 @@ export default function SignUp({ navigation }) {
           secureTextEntry={true}
           />
 <Text>Present us your dog!</Text>
+<Button title="Pick Image" onPress={pickImageHandler} />
+<Image source={image} style={{ width: 200, height: 200 }}/>
 <TextInput
           style={styles.textInput}
           placeholder="Dog`s name*"

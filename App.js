@@ -25,7 +25,7 @@ function Home() {
       }}>
     
 
-       <Tab.Screen name="Profile" component={Dashboard}   />
+       <Tab.Screen  name="Profile"  component={Dashboard}   />
      
         <Tab.Screen name="Swipe"  component={Cards}   />
 
