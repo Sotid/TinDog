@@ -41,22 +41,23 @@ export default function Dashboard({ navigation }) {
     getUserInfo();
   });
 
+  async function handleConfirm  () {
+    let newDog = await  firebase
+    .firestore()
+    .collection("users")
+    .doc(currentUserUID)
+    .get()
+
+    firebase
+    .firestore()
+    .collection("dogs")
+    .add(newDog.data())
+  }
   const handlePress = () => {
     loggingOut();
     navigation.replace("Home");
   };
-  let findCoordinates = () => {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const location = JSON.stringify(position);
-        console.log(location);
-        setCoordinates({ location });
-      },
-      (error) => Alert.alert(error.message),
-      { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
-    );
-  };
-  // console.log(coordinates)
+
   return (
     <View style={styles.root}>
       <LinearGradient colors={["#ff9999", "#faf3dd"]} style={styles.gradient} />
@@ -85,20 +86,12 @@ export default function Dashboard({ navigation }) {
         </Card>
       </View>
 
-      {/* <Text style={styles.titleText}>Hi {firstName} and {dogName}</Text>
-      <Image source={{ uri: image }} style={styles.image} />
-      <View style={styles.table}>
-     
-      <Text style={styles.text}> {dogName}</Text>
-      <Text style={styles.text}> {age} years old </Text>
-      <Text style={styles.text}> {breed} </Text>
-      <Text style={styles.text}> {city}</Text>
-      <Text style={styles.text}> {character}</Text>
 
-</View> */}
+     
+     
       <View style={{ alignItems: "center" }}>
-        <TouchableOpacity style={styles.button} onPress={findCoordinates}>
-          <Text style={styles.buttonText}>Location: </Text>
+        <TouchableOpacity style={styles.button} onPress={handleConfirm}>
+          <Text style={styles.buttonText}>Confirm and start </Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.button} onPress={handlePress}>

@@ -1,20 +1,18 @@
 import React from 'react';
-import { Text, View } from 'react-native';
-import { createIconSetFromFontello } from 'react-native-vector-icons';
-import fontelloConfig from '../../config.json';
-const Icon = createIconSetFromFontello(fontelloConfig);
+import { Text, View, Icon} from 'react-native';
+import CustomIcon from  "../../customIcon"
+
 
 const Messages = () => {
   return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" , backgroundColor: "pink"}}>
       <Text>
         Try editing me! 🎉
       </Text>
-      <Icon name="dog-icons-set-happy-sad-angry-isolated-vector-1860708-copia-3" size={80} c
+      <CustomIcon name="Happy" size={50} /> 
       
       
-      
-       />
+  
     </View>
   );
 }

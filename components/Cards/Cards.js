@@ -1,45 +1,64 @@
-import React, { useState, useMemo, useEffect } from "react";
-import { Button, View } from "react-native";
+import React, { useState, useEffect } from "react";
+import { Button, Text, View, StyleSheet, TouchableOpacity, LayoutAnimation } from "react-native";
 import styled from "styled-components/native";
 import TinderCard from "react-tinder-card";
-import firebase from "../../database/firebase";
+import database from "../../database/firebase";
+import firebase from 'firebase/app';
 
 // const alreadyRemoved = [];
 // let charactersState = cards;
-
+import 'firebase/firestore';
 function Cards() {
   const [dogs, setDogs] = useState();
-  const [yes, setYes] = useState([])
-  const [no, setNo] = useState([])
-  const [lastDirection, setLastDirection] = useState()
+  const [yes, setYes] = useState([]);
+  const [no, setNo] = useState([]);
+  const [lastDirection, setLastDirection] = useState();
+const [index,setIndex] = useState(0)
 
-  const swiped = ( direction,nameToDelete, i) => {
-   if(direction === "up"){
-    
-    console.log("removing:" + nameToDelete);
-    setLastDirection(direction)
-    setYes(yes.push(nameToDelete))
-
-      console.log(nameToDelete)
-      console.log(yes)
-   }else{
-    setLastDirection(direction)
-    setYes(no.push(nameToDelete))
-
-      console.log(nameToDelete)
-      console.log(no)
-   }
+  const swiped = (direction, nameToDelete) => {
+    const currentUser = firebase.auth().currentUser;
+    const db = firebase.firestore();
+    if (direction === "up") {
+      setLastDirection(direction);
+      // let yeN = yes.push(nameToDelete));
+   setYes([...yes], nameToDelete)
+   yes.push(nameToDelete)
+   db.collection('likes')
+      .doc(currentUser.uid)
+      .set({
+       like:yes
+      })
+    } else {
+      setLastDirection(direction);
+      setNo([...no], nameToDelete)
+      no.push(nameToDelete)
+      db.collection('dislikes')
+      .doc(currentUser.uid)
+      .set({
+       dislike:no
+      })
+    }
 
   };
+
+
+  const goToNext = () => {
+   if(index >= 0 && index < dogs.length)
+          setIndex(dogs[index + 1])
+     
+    }
+
+    console.log(index)
 
   const outOfFrame = (name) => {
     console.log(name + " left the screen!");
   };
 
+ 
   useEffect(() => {
-    const unsuscribe = firebase
+    const unsuscribe = database
       .collection("dogs")
-    
+
       .onSnapshot((snapshot) =>
         setDogs(snapshot.docs.map((doc) => doc.data()))
       );
@@ -47,8 +66,6 @@ function Cards() {
       unsuscribe();
     };
   }, []);
-  console.log(lastDirection)
-console.log(yes)
 
   return (
     <Container>
@@ -79,6 +96,7 @@ console.log(yes)
     </Container>
   );
 }
+   
 
 const Container = styled.View`
   display: flex;
@@ -94,7 +112,6 @@ const CardContainer = styled.View`
   height: 700px;
   padding: 100px 50px;
 `;
-
 const Card = styled.View`
   position: absolute;
   background-color: #fff;
@@ -116,12 +133,13 @@ const CardImage = styled.ImageBackground`
 `;
 
 const CardTitle = styled.Text`
-  position: absolute;
+  ${"" /* position: absolute; */}
   bottom: 0;
   margin: 10px;
   color: white;
-  fontsize: 25px;
-  fontweight: 700;
+  fontSize: 25px;
+  fontWeight: 900;
+  paddingbottom: "5%";
 `;
 
 const Buttons = styled.View`
@@ -134,6 +152,14 @@ const InfoText = styled.Text`
   justify-content: center;
   display: flex;
   z-index: -100;
+`;
+const Info = styled.Text`
+    color: white;
+    fontWeight: 900;
+`;
+const ContainerInfo = styled.View`
+paddingTop: 80%;
+paddingLeft: 65%;
 `;
 
 export default Cards;

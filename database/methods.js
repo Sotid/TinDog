@@ -9,7 +9,7 @@ export async function registration(email, password, lastName, firstName, dogName
     const currentUser = firebase.auth().currentUser;
      const db = firebase.firestore();
 
-    db.collection('users')
+    let newUser= db.collection('users')
       .doc(currentUser.uid)
       .set({
         uid: currentUser.uid,
@@ -23,7 +23,9 @@ export async function registration(email, password, lastName, firstName, dogName
         city: city,
         image:image
       })
-    
+      .get()
+      .add(newUser.data())
+
 
 
   } catch (err) {
