@@ -20,7 +20,6 @@ const [index,setIndex] = useState(0)
     const db = firebase.firestore();
     if (direction === "up") {
       setLastDirection(direction);
-      // let yeN = yes.push(nameToDelete));
    setYes([...yes], nameToDelete)
    yes.push(nameToDelete)
    db.collection('likes')
@@ -32,7 +31,7 @@ const [index,setIndex] = useState(0)
       setLastDirection(direction);
       setNo([...no], nameToDelete)
       no.push(nameToDelete)
-      db.collection('dislikes')
+      db.collection('dislike')
       .doc(currentUser.uid)
       .set({
        dislike:no
@@ -44,15 +43,11 @@ const [index,setIndex] = useState(0)
 
   const goToNext = () => {
    if(index >= 0 && index < dogs.length)
-          setIndex(dogs[index + 1])
-     
+          setIndex(index + 1)
+          dogs.length + 1
     }
 
     console.log(index)
-
-  const outOfFrame = (name) => {
-    console.log(name + " left the screen!");
-  };
 
  
   useEffect(() => {
@@ -75,24 +70,25 @@ const [index,setIndex] = useState(0)
             <TinderCard
               key={dog.Name}
               preventSwipe={["right", "left"]}
-              onSwipe={(dir) => swiped(dir, dog.Name)}
-              onCardDownScreen={() => outOfFrame(dog.Name)}
+              onSwipe={(dir) => swiped(dir, dog.dogName)}
             >
               <Card>
-                <CardImage source={{ uri: dog.Image }}>
-                  <CardTitle>{dog.Name}</CardTitle>
-                  <View>{dog.Location}</View>
+                <CardImage source={{ uri: dog.image }}>
+                <CardInfo>{dog.age} years old, {dog.city}</CardInfo>
+
+                  <CardTitle>{dog.dogName}</CardTitle>
+
                 </CardImage>
+
               </Card>
+
             </TinderCard>
           ))}
       </CardContainer>
-      {/* {yes &&
-          yes.map((ye) => {
-<Text>{ye}</Text>
-          })} */}
-      <Button title="Like" />
-      <Button title="Not" />
+      <TouchableOpacity title="Like" onPress= {()=> goToNext()}>
+      <Text>Like</Text>
+      </TouchableOpacity>
+      <Button title="Not" onPress= {()=> goToNext()}/>
     </Container>
   );
 }
@@ -139,9 +135,16 @@ const CardTitle = styled.Text`
   color: white;
   fontSize: 25px;
   fontWeight: 900;
-  paddingbottom: "5%";
 `;
-
+const CardInfo = styled.Text`
+position: absolute; 
+  margin: 10px;
+  color: white;
+  fontSize: 15px;
+  fontWeight: 900;
+  paddingTop: 260px;
+  paddingLeft: 59px;
+`;
 const Buttons = styled.View`
   margin: 20px;
   z-index: -100;
